@@ -49,8 +49,11 @@
         </form>
 
         <div class="row">
-            <div id='avatar-container' class=col-md></div>
-            <div id="character-data" class=col-md></div>
+            <img id = "avatar" />
+    <p> Name: <span id = "name"></span></p>
+    <p> age: <span id = "age"></span></p>
+    <p> Force Points: <span id = "forcepoints"></span></p>
+    <p> role: <span id = "role"></span></p>
         </div>
 
     </div>
@@ -73,8 +76,9 @@ const form = $('form')
     form.on('submit', e => {
       e.preventDefault()
       const searchTerm = searchInput.val()
-      $.ajax(`/api/characters${searchTerm}`)
+      $.ajax(`/api/characters/${searchTerm}`)
         .then(characterData => {
+            console.log(characterData)
           avatar.attr('src', characterData.avatar)
           name.text(characterData.name)
           age.text(characterData.age)
