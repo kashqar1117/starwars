@@ -1,6 +1,11 @@
+const path  = require('path')
 const express = require('express');
 const app = express();
 const PORT = 3000;
+
+
+app.use(express.urlencoded({extended: true }))
+app.use(express.json())
 
 
 
@@ -36,8 +41,18 @@ const characters = [
 
 
 app.get('/' , (req, res) =>{
-    res.send('May the force be with you!')
+ 
+    res.sendFile(path.join(__dirname + '/public/index.html'))
 })
+
+
+app.get('/add', (req,res) =>{
+    res.sendFile(path.join(__dirname + '/public/add.html'))
+})
+
+/*
+ API ROUTES 
+*/
 
 
 // /api/characters - show all character data
@@ -48,18 +63,30 @@ app.get('/api/characters', (req , res) =>{
 })
 
 // /api/characters
-app.get('characters', (req , res)=>{
+app.get('/api/characters/:routeName', (req , res)=>{
     const targetCharacter = req.params.routeName
 
     const character = characters.find( character => {
        
-       console.log(character)
+      return character.routeName === targetCharacter
        
 
     })
-    res.end()
+
+ 
+    res.json(character)
 })
 
+//add new characters
+app.post('/api/characters/add' , (req , res) =>{
+
+    const newCharacter = req.body
+    newCharacter.routeName = newCharacter.name.replace(/ /g, '').toLowerCase()
+    characters.push(newCharacter)
+    console.log(characters)
+    res.status(200).send()
+
+})
 
 
 app.listen(PORT , ()=>{
