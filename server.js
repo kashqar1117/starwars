@@ -1,7 +1,7 @@
 const path  = require('path')
 const express = require('express');
 const app = express();
-const PORT = 3000;
+var PORT = process.env.PORT || 3001;
 
 
 app.use(express.urlencoded({extended: true }))
@@ -60,11 +60,25 @@ app.get('/add', (req,res) =>{
 app.get('/api/characters', (req , res) =>{
     res.json(characters)
 
+
+
+
+})
+//add new characters
+app.post('/api/characters/add' , (req , res) =>{
+
+    const newCharacter = req.body
+    newCharacter.routeName = newCharacter.name.replace(/ /g, '').toLowerCase()
+    characters.push(newCharacter)
+    console.log(characters)
+    res.status(200).send()
+
 })
 
 // /api/characters
 app.get('/api/characters/:routeName', (req , res)=>{
     const targetCharacter = req.params.routeName
+    console.log(targetCharacter)
 
     const character = characters.find( character => {
        
@@ -77,16 +91,7 @@ app.get('/api/characters/:routeName', (req , res)=>{
     res.json(character)
 })
 
-//add new characters
-app.post('/api/characters/add' , (req , res) =>{
 
-    const newCharacter = req.body
-    newCharacter.routeName = newCharacter.name.replace(/ /g, '').toLowerCase()
-    characters.push(newCharacter)
-    console.log(characters)
-    res.status(200).send()
-
-})
 
 
 app.listen(PORT , ()=>{
